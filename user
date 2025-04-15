@@ -1,0 +1,32 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+# 요청 데이터 모델 정의
+class User(BaseModel):
+    username: str
+    age: int
+
+@app.post("/users/")
+async def create_user(user: User):
+    # 요청 데이터를 딕셔너리로 변환
+    user_dict = user.dict()
+
+    # HTML 응답 생성
+    html_content = f"""
+    <html>
+    <head>
+        <title>User Details</title>
+    </head>
+    <body>
+        <h1>User Information</h1>
+        <h3>Username: {user.username}</h3>
+        <h3>Age: {user.age}</h3>
+        <p>User Name from Dict: {user_dict['username']}</p>
+        <p>User age from Dict: {user_dict['age']}</p>
+    </body>
+    </html>
+    """
+
+    return html_content
